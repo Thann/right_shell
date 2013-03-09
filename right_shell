@@ -2,7 +2,7 @@
 
 termCmd = "gnome-terminal-og -e"
 
-if ARGV[0][0,6] != "rsh://"
+if ! ARGV[0] || ARGV[0][0,6] != "rsh://"
   puts "Unexpected Args:", ARGV
   exit 1
 end
