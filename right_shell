@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+termCmd = "gnome-terminal-og -e"
+
+if ARGV[0][0,6] != "rsh://"
+  puts "Unexpected Args:", ARGV
+  exit 1
+end
+
+host, fprint = ARGV[0][6..-1].split('@',2)
+tmpFile = "/tmp/rs_key"
+sshArgs = "-l rightscale -o UserKnownHostsFile=#{tmpFile}"
+
+`ssh-keyscan -t rsa #{host} > #{tmpFile} 2> /dev/null`
+foundPrint = `ssh-keygen -lf #{tmpFile}`.split()[1]
+
+if fprint == foundPrint
+  #`cat #{tmpFile} >> ~/.ssh/known_hosts`
+  `#{termCmd} "ssh #{host} #{sshArgs}"`
+else
+  puts "Warning: MiM attack detected!"
+end
+

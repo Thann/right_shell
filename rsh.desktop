@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=rsh
+Comment=Rightscale SSH Terminal
+Exec=right_shell %U
+Terminal=false
+Type=Application
+Encoding=UTF-8
+#Categories=Network;Application;
+MimeType=x-scheme-handler/rsh;
