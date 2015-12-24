@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# TERM_CMD="gnome-terminal-og -e"
+TERM_CMD="echo"
+
+TEMP_FILE=`mktemp`
+trap "rm $TEMP_FILE" EXIT
+
+SSH_REGEXP="^ssh://([^;@]*)(;fingerprint=([^@]+))?@?(.*)$"
+
+# Validate URI
+if [[ ! $1 =~ $SSH_REGEXP ]]; then echo "ERROR: invalid URI \"$1\"."; exit 1; fi
+
+USER=${BASH_REMATCH[1]}
+FPRINT=${BASH_REMATCH[3]}
+HOST=${BASH_REMATCH[4]}
+
+echo "REMATCH= ${BASH_REMATCH[*]}"
+echo "USER=$USER"
+echo "FPRINT=$FPRINT"
+echo "HOST=$HOST"
+
+if [[ -n $FPRINT ]]; then
+	echo "FFF"
+	ssh-keyscan $HOST &> $TEMP_FILE
+	HOST_PRINTS=$(ssh-keygen -l -f $TEMP_FILE)
+
+	echo -----------------
+	echo "$HOST_PRINTS"
+fi
+
+
